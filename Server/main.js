@@ -16,22 +16,27 @@
     
 // }
 
+// require 3rd party library
 var express=require('express');
+const fs = require('fs');
+const csv = require('fast-csv');
+const multer = require('multer');
+const upload = multer({ dest: './uploads/' });
+
+// require own library
 let control = require('./controller.js');
 let jsonparse = require('./jsonParse.js');
-var app=express();
-
+let importcsv = require('./importcsv.js');
+var importCSV = new importcsv();
+var app =  express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 var controller = new control();
 var jsonToParse = new jsonparse();
 app.get('/',function(req,res)
 {
     res.send("Hello world");
-});
-
-app.get('/Upload',function(req,res)
-{
-   res.send(req.params);
 });
 app.get('/login',(req,res)=>{
     res.send({username:'pavan',password:'123456'})
@@ -56,5 +61,29 @@ app.post('/addproducts',(req,res)=>{
    var jsonData = jsonToParse.parseJson(req); 
    controller.addProducts(jsonData);
 })
+
+// sample csv upload code
+app.post('/Upload', upload.single('myFile'), function (req, res, next) {
+    console.log(req.file);
+    if (req.file) {
+        console.log('Uploading file...');
+        var filename = req.file.filename;
+        var  originalFilename = req.file.originalname.split('.');
+        if((originalFilename[1] == 'csv')){
+            importCSV.importcsv(filename);
+        }
+        // var uploadStatus = 'File Uploaded Successfully';
+    } else {
+        console.log('No File Uploaded');
+        // var filename = 'FILE NOT UPLOADED';
+        // var uploadStatus = 'File Upload Failed';
+    }
+  })
+
+
+function parseFile(req, res, next){
+    var filePath = req.files.file.path;
+    console.log(filePath);
+}
 var server=app.listen(3000,function() {});
 

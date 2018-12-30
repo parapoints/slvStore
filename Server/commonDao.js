@@ -1,4 +1,4 @@
-const sql =  require ("mysql");
+const mysql =  require ("mysql");
 
 
 module.exports = class CommonDAO{
@@ -7,22 +7,29 @@ module.exports = class CommonDAO{
     }
 
     connectToDB(){
-        var con = sql.createConnection({
+        var flag = false;
+        var con = mysql.createConnection({
             host:"localhost",
+            port:"3306",
             user:"root",
-            password:"1111"
-        })
+            password:"goutam",
+            database : "test"
+        });
         con.connect((err)=>{
          if(err){
              throw err;
-             return false;
-
+             flag = false;
          }
-         console.log("connected");
+         else{
+            console.log("connected");
+            flag = true;
+         }
          
-
-        })
-        return true;
+        });
+        while (!flag) {
+            require('deasync').runLoopOnce();
+        }
+        return con;
     }
     
     insertAdmin(admin){
@@ -39,7 +46,24 @@ module.exports = class CommonDAO{
     }
 
 
+    inportCSV(data){
+        var flag = false;
+        var connection = this.connectToDB();//.connect to mysql database
+       // if(connection == true){
+            var query = connection.query('INSERT INTO importsampledata (suger, salt) VALUES ?', [data], (error, response) => {
+                if(error){
+                   throw error;
+                } 
+                else{
+                    flag = true;
+                }
+                });
+                while (!flag) {
+                    require('deasync').runLoopOnce();
+                }
+                return flag;
+        }
 
-
+    
 
 }

@@ -1,24 +1,45 @@
-<form action="http://localhost:3000/Upload" method="get">
-    <table style="width:100">
-        <thead>
-            <tr>
-                <td>
-                    Upload Csv
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                Choose a File to Upload : 
+<form action="http://localhost:3000/Upload" enctype="multipart/form-data" method="post">
+   
+ <table style="width:100">
+       
+ <thead>
+            
+<tr>
+               
+ <td>
+                   
+ Upload Csv
+               
+ </td>
+         
+   </tr>
+       
+ </thead>
+       
+ <tbody>
+       
+   
+  <tr>
+          
+      Choose a File to Upload : 
 
-            </tr>
-            <tr>
-                <input type="file">
-            </tr>
-        </tbody>
-    </table>
+        
+
+    </tr>
+          
+  <tr>
+              
+  <input type="file" name="myFile" id="myFile" required />
+ 
+         
+  </tr>
+      
+  </tbody>
+    
+</table>
 
     
-    <button type="submit">Submit</button><br>
+    
+<button type="submit">Submit</button><br>
     
   </form>
