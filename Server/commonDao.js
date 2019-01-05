@@ -12,8 +12,8 @@ module.exports = class CommonDAO{
             host:"localhost",
             port:"3306",
             user:"root",
-            password:"goutam",
-            database : "test"
+            password:"1111",
+            database : "slvstore"
         });
         con.connect((err)=>{
          if(err){
@@ -32,7 +32,7 @@ module.exports = class CommonDAO{
         return con;
     }
     
-    insertAdmin(admin){
+    insertAdmin(admin){ 
         
         this.connectToDB(); //connect to mysql database
     
@@ -50,8 +50,9 @@ module.exports = class CommonDAO{
         var flag = false;
         var connection = this.connectToDB();//.connect to mysql database
        // if(connection == true){
-            var query = connection.query('INSERT INTO importsampledata (suger, salt) VALUES ?', [data], (error, response) => {
+            var query = connection.query('INSERT INTO product_catalog  VALUES ?', [data], (error, response) => {
                 if(error){
+                    console.log(error);
                    throw error;
                 } 
                 else{
