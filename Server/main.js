@@ -27,16 +27,20 @@ const upload = multer({ dest: './uploads/' });
 let control = require('./controller.js');
 let jsonparse = require('./jsonParse.js');
 let importcsv = require('./importcsv.js');
+let enums = require('./enums');
 var importCSV = new importcsv();
 var app =  express();
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 var controller = new control();
 var jsonToParse = new jsonparse();
+var mainenum = new enums();
 app.get('/',function(req,res)
 {
-    res.send("Hello world");
+    res.send(mainenum.getValue('SeasonCode'));
 });
 app.get('/login',(req,res)=>{
     res.send({username:'pavan',password:'123456'})
