@@ -22,12 +22,13 @@ const fs = require('fs');
 const csv = require('fast-csv');
 const multer = require('multer');
 const upload = multer({ dest: './uploads/' });
-
+const imageupload = multer({dest:'./Assets/ProductImages/'})
 // require own library
 let control = require('./controller.js');
 let jsonparse = require('./jsonParse.js');
 let importcsv = require('./importcsv.js');
 let enums = require('./enums');
+let path = require('path');
 var importCSV = new importcsv();
 var app =  express();
 
@@ -83,11 +84,27 @@ app.post('/Upload', upload.single('myFile'), function (req, res, next) {
         // var uploadStatus = 'File Upload Failed';
     }
   })
+  app.post('/UploadImage' , imageupload.single('imagefile'), (req,res)=>{
+    if (req.file) {
+        console.log('Uploading file...');
+        var imagepath = req.file.filename;
+        res.send(req.headers.host+'/Assets/ProductImages'+imagepath+'.jpeg')
+        
+        // var uploadStatus = 'File Uploaded Successfully';
+    } else {
+        console.log('No File Uploaded');
+        // var filename = 'FILE NOT UPLOADED';
+        // var uploadStatus = 'File Upload Failed';
+    }
+     
 
+  })
 
 function parseFile(req, res, next){
     var filePath = req.files.file.path;
     console.log(filePath);
+
+
 }
 var server=app.listen(3000,function() {});
 
