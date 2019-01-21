@@ -17,6 +17,7 @@
 // }
 
 // require 3rd party library
+
 var express=require('express');
 const fs = require('fs');
 const csv = require('fast-csv');
@@ -75,8 +76,20 @@ app.post('/Upload', upload.single('myFile'), function (req, res, next) {
         var filename = req.file.filename;
         var  originalFilename = req.file.originalname.split('.');
         if((originalFilename[1] == 'csv')){
-            importCSV.importcsv(filename);
+            var uploaded =importCSV.importcsv(filename);
+
         }
+
+        
+            res.send({
+                requestcommand:"uploadCsv",
+                 argsList:[{
+                    name:"status",
+                    value:true,
+                    type:uploaded
+                }]
+            })
+        
         // var uploadStatus = 'File Uploaded Successfully';
     } else {
         console.log('No File Uploaded');
@@ -99,6 +112,20 @@ app.post('/Upload', upload.single('myFile'), function (req, res, next) {
      
 
   })
+
+  app.get('/getProducts',(req,res)=>{
+        var response =controller.fetchproducts().then(prod=>{
+            res.send(prod);
+        });
+        // var result = controller.fetchproducts().subscribe(x=>{
+        //    res.send(x);
+        // })
+       
+        
+
+
+  }) //getproducts
+
 
 function parseFile(req, res, next){
     var filePath = req.files.file.path;

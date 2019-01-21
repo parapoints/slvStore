@@ -40,6 +40,7 @@ module.exports = class UploadCSV {
                 // open the connection
                     if (!result) {
                         console.log('Not inserted');
+                        return false;
                     } else {
                         console.log('Inserted successfully');
                     }
@@ -48,5 +49,6 @@ module.exports = class UploadCSV {
             });
         
         stream.pipe(csvStream);
+        return true;
     }
 }

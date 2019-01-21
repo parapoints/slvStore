@@ -1,10 +1,12 @@
 'use strict';
+
 let rxjs = require('rxjs');
 const fs = require('fs');
 let commondao = require("./commonDao.js");
+let enums = require('./enums');
 
 var common = new commondao();
-
+var enumto = new enums();
 module.exports = class Controller {
     constructor(){
 
@@ -44,7 +46,28 @@ module.exports = class Controller {
     })  
 
 return observabele;
-}
+} // upload image
+
+fetchproducts(req){
+    var give =[];
+        return common.select_products();
+    
+        
+    //  rxjs.Observable.create((observer)=>{
+    //             // console.log(common.select_products())
+    //             console.log("fetch");
+    //             observer.next('fetch');
+
+    //             //   common.select_products(observer).subscribe(res=>{
+    //             //       console.log(res);
+    //             //   });
+            
+    //     })
+        // return observable;
+
+
+  
+} //fetch products
 
 
 

@@ -1,5 +1,6 @@
 const mysql =  require ("mysql");
 
+let rxjs = require('rxjs');
 
 module.exports = class CommonDAO{
     constructor(){
@@ -64,6 +65,38 @@ module.exports = class CommonDAO{
                 }
                 return flag;
         }
+
+        select_products(observe){
+            console.log('inside select produts')
+            var connection = this.connectToDB(); // connect to mysql database;
+          
+        //               var query = connection.query('select * from  product_catalog ',(error,res)=>{
+        //         if(error){
+        //             return error
+        //         }
+        //         else{
+        //             console.log(res);
+            
+        //             observe.next(res);
+        //                 // console.log(res);
+                        
+                    
+        //         }
+          
+        
+        // })
+        var sql = "select * from product_catalog";
+        return new Promise( ( resolve, reject ) => {
+            connection.query( sql,( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                    // console.log(rows);
+                resolve( rows );
+            } );
+        } );
+           
+        }
+
 
     
 
