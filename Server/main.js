@@ -30,9 +30,10 @@ let jsonparse = require('./jsonParse.js');
 let importcsv = require('./importcsv.js');
 let enums = require('./enums');
 let path = require('path');
+var unzip = require('unzipper');
 var importCSV = new importcsv();
 var app =  express();
-
+var extract = require('extract-zip')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -79,7 +80,18 @@ app.post('/Upload', upload.single('myFile'), function (req, res, next) {
             var uploaded =importCSV.importcsv(filename);
 
         }
+        else if (originalFilename[1] == 'zip')
+        {
 
+
+            var source = './uploads/'+filename;
+            var target ='/home/ubuntu/employee';
+            extract(source, {dir: target}, function (err) {
+                console.log(err);
+                // extraction is complete. make sure to handle the err
+               })
+
+             }
         
             res.send({
                 requestcommand:"uploadCsv",
