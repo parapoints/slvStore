@@ -321,11 +321,11 @@ function parseFile(req, res, next) {
 }
 
 //sendMail
-app.post('/sendmail',(req,res) =>{
-    console.log();
-    let emailservice = new emailservice()
-    //emailservice.sendMail()
-})
+// app.post('/sendmail',(req,res) =>{
+//     console.log(req.body.user);
+//     let emailservice = new emailservice()
+//     emailservice.sendMail()
+// })
 //email,body
 //parsed.email.emailid, parsed.body
 
