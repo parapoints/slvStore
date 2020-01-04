@@ -21,6 +21,7 @@ var express = require('express');
 const fs = require('fs');
 const csv = require('fast-csv');
 const multer = require('multer');
+const emailservice = require('./EmailService.js')
 
 const imageupload = multer({dest: './Assets/ProductImages/'})
 let commondao = require("./commonDao.js");
@@ -285,8 +286,16 @@ function parseFile(req, res, next) {
     var filePath = req.files.file.path;
     console.log(filePath);
 
-
 }
+
+//sendMail
+app.post('/sendmail',(req,res) =>{
+    console.log();
+    let emailservice = new emailservice()
+    //emailservice.sendMail()
+})
+//email,body
+//parsed.email.emailid, parsed.body
 
 var server = app.listen(3002, function () {
 });

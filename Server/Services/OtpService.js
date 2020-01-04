@@ -1,4 +1,4 @@
-'use strict';
+
 
 let rxjs = require('rxjs');
 const fs = require('fs');
