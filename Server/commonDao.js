@@ -51,6 +51,27 @@ module.exports = class CommonDAO{
         }
     }
 
+      insertUser(user){
+        var connection = this.connectToDB();
+          let data =[];
+          data.push(user.user_id);
+          data.push(user.phone);
+          data.push(user.password);
+      return new Promise(function(resolve,reject){
+          var query = connection.query('INSERT INTO users VALUES ?', [data], (error, response) => {
+              if(error){
+                  console.log(error);
+                 return reject;
+                         }
+              else{
+                    return resolve;
+              }
+              });
+
+
+        })
+
+      }
 
     inportCSV(data){
         var flag = false;
