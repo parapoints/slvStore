@@ -48,11 +48,10 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({storage: storage})
-
-
 var controller = new control();
 var jsonToParse = new jsonparse();
 var mainenum = new enums();
+var injectable = require('./Services/OtpService');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -161,6 +160,37 @@ app.post('/UploadImage', imageupload.single('imagefile'), (req, res) => {
 
 })
 
+app.post('/requestToken',function(req,res){
+      var service = new injectable();
+     service.authToken(req.body.token).then(function(token){
+       if(token.success === 'true'){
+         res.send(JSON.stringify(token));
+       }
+       else{
+         res.send('something went wrong')
+       }
+     })
+})
+
+app.post('/registerUser',function(req,res){
+    common.insertUser(req.body.user).then(function(err,user){
+      res.send(user);
+    })
+})
+app.post('/sendOTP',function(req,res){
+      var service = new injectable();
+      console.log(req.body.user);
+      service.registerUser(req.body.user).then(function(reg){
+
+        if(reg.success === true){
+            console.log("res"+reg);
+          res.send(JSON.stringify(reg));
+        }
+        else{
+          res.send('something went wrong')
+        }
+      })
+     })
 
 app.get('/getCategories', function (req, res) {
         var common  = new commondao();
@@ -168,6 +198,8 @@ app.get('/getCategories', function (req, res) {
         res.send(rows);
     })
 })
+
+
 app.post('/getProductsByCategory', (req, res) => {
     console.log(req + "request got");
     var response = controller.fetchproducts_by_category(req).then(prod => {
