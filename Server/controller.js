@@ -149,4 +149,11 @@ fetchproducts_by_category(req){
       var catId = req.body.catID;
       return common.select_products_by_category(catId)
 }
+
+
+putCart(req){
+  var parsed = JSON.parse(req.body.cart);
+  var cartDetails = parsed;
+      return common.insertCart(cartDetails);
+}
 }

@@ -54,22 +54,50 @@ module.exports = class CommonDAO{
       insertUser(user){
         var connection = this.connectToDB();
           let data =[];
-          data.push(user.user_id);
-          data.push(user.phone);
-          data.push(user.password);
+          let parseduser = JSON.parse(user)
+          data.push(parseduser.user_id);
+          data.push(parseduser.phone);
+          data.push(parseduser.password);
+          let array = [];
+          array.push(data);
       return new Promise(function(resolve,reject){
-          var query = connection.query('INSERT INTO users VALUES ?', [data], (error, response) => {
+          var query = connection.query('INSERT INTO users VALUES ?', [array], (error, response) => {
               if(error){
                   console.log(error);
                  return reject;
                          }
               else{
-                    return resolve;
+                    return resolve(response);
               }
               });
 
 
         })
+
+      }
+
+      insertCart(cart){
+        let data =[];
+          var connection = this.connectToDB();
+        cart.cartid = Math.random();
+        data.push(cart.cartid);
+        data.push(JSON.stringify(cart.orders));
+        let array = [];
+        array.push(data);
+        return new Promise(function(resolve,reject){
+            var query = connection.query('INSERT INTO orders VALUES ?', [array], (error, response) => {
+                if(error){
+                    console.log(error);
+                   return reject;
+                           }
+                else{
+                      return resolve(response);
+                }
+                });
+
+
+          })
+
 
       }
 

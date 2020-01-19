@@ -21,8 +21,6 @@ var express = require('express');
 const fs = require('fs');
 const csv = require('fast-csv');
 const multer = require('multer');
-const emailservice = require('./EmailService.js')
-
 const imageupload = multer({dest: './Assets/ProductImages/'})
 let commondao = require("./commonDao.js");
 // require own library
@@ -52,6 +50,7 @@ var controller = new control();
 var jsonToParse = new jsonparse();
 var mainenum = new enums();
 var injectable = require('./Services/OtpService');
+var emailservice = require('./Services/EmailService');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -137,6 +136,51 @@ app.post('/Upload', upload.array('myFile', 12), function (req, res, next) {
         // var uploadStatus = 'File Upload Failed';
     }
 })
+
+app.post('/insertCart',function(req,res){
+        controller.putCart(req).then(function(rows){
+          if(rows.affectedRows == 1){
+             let email = new emailservice();
+             let userparsed = JSON.parse(req.body.cart);
+             let products = userparsed.orders;
+             var table_body = '<table border="1" id="example"><thead><tr><th> Product Name</th><th> Product Price </th><th>Product Quantity</th><th>Numbers</th></tr></thead><tbody>';
+                 for(var i =0; i<products.length;i++){
+                     table_body+='<tr>';
+                     table_body +='<td>';
+                     table_body +=products[i].product_name;
+                   +='</td>';
+                     table_body +='<td>';
+                     table_body +='&#x20b9;'+products[i].product_price;
+                     table_body +='</td>';
+                     table_body +='<td>';
+                     table_body +=products[i].product_quantity;
+                     table_body +='</td>';
+                     table_body +='<td>';
+                     table_body +=products[i].value;
+                     table_body +='</td>';
+                     table_body+='</tr>';
+                 }
+                 table_body+='</tbody></table>';
+                 table_body+='<table border="1" id="example"><thead><tr>Total</tr></thead><tbody>'
+                 table_body+='<tr>';
+                 table_body+='<td>';
+                 table_body+= '&#x20b9; :'+userparsed.total;
+                 table_body+='</tr>';
+                 table_body+='</td>';
+                 table_body+='</tbody></table>';
+                 table_body+='<table border="1" id="example"><thead><tr>Phone Number</tr></thead><tbody>'
+                 table_body+='<tr>';
+                 table_body+='<td>';
+                 table_body+='Phone :'+userparsed.phone;
+                 table_body+='</tr>';
+                 table_body+='</td>';
+                 table_body+='</tbody></table>';
+             email.sendEmail('pavan1994rg@gmail.com',table_body).then(function(info){
+                       res.send(info);
+             })
+          }
+        })
+})
 app.post('/putProducts', function (req, res) {
     console.log(req);
     console.log(req.body.products);
@@ -172,11 +216,22 @@ app.post('/requestToken',function(req,res){
      })
 })
 
+app.post('/sendEmail',function(req,res){
+        let email = new emailservice();
+        console.log(req.body.email);
+        let parsedbody = JSON.parse(req.body.email);
+        email.sendEmail(parsedbody.email,parsedbody.body).then(function(info){
+                  res.send(info);
+        })
+
+})
 app.post('/registerUser',function(req,res){
-    common.insertUser(req.body.user).then(function(err,user){
+  var common  = new commondao();
+    common.insertUser(req.body.user).then(function(user){
       res.send(user);
     })
 })
+
 app.post('/sendOTP',function(req,res){
       var service = new injectable();
       console.log(req.body.user);

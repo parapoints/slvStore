@@ -1,4 +1,4 @@
-
+'use strict';
 
 let rxjs = require('rxjs');
 const fs = require('fs');
@@ -44,7 +44,6 @@ module.exports = class OtpService {
    requestOTP(){
     return authy.request_sms(authyId)
    }
-
    authToken(Usertoken){
      console.log(authyId)
      return new Promise(function(resolve,reject){

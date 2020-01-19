@@ -1,16 +1,17 @@
 const nodemailer = require('nodemailer');
 const emailConfig = require('../utility/emailConfig');
-const smtpTransport = require('nodemailer-smtp-transport')
+var smtpTransport = require('nodemailer-smtp-transport');
+var handlebars = require('handlebars');
 
-module.exports = class EmailService{
+module.exports = class EmailService {
     constructor(){
 
     }
-
-    sendEmail(recieverEmailId,body,res){
+    sendEmail(recieverEmailId,body){
+      console.log(emailConfig.senderEmailId);
+    return  new Promise(function(resolve,reject){
         var transporter = nodemailer.createTransport(smtpTransport({
             service: 'gmail',
-            host: 'smtp.gmail.com',
             auth: {
                 user: emailConfig.senderEmailId,
                 pass: emailConfig.senderPassword
@@ -21,17 +22,19 @@ module.exports = class EmailService{
             from: emailConfig.senderEmailId,
             to: recieverEmailId,
             subject: 'Order Invoice',
-            text: 'order placed successfully'
+            html: body
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
-                res.send(error)
+                return reject(info);
             } else {
                 console.log('email sent', +info.response);
-                res.send("email sent")
+              return resolve(info);
             }
         });
+      })
+
     }
 }
